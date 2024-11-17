@@ -23,4 +23,16 @@ class Book(models.Model):
     def __str__(self):
         return str(self.id)
 
+class Rating(models.Model):
+    book = models.ForeignKey(Book, related_name='ratings', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # assuming users are logged in
+    rating = models.IntegerField(choices=[(i, str(i)) for i in range(1, 6)])  # 1 to 5 scale
+
+    class Meta:
+        unique_together = ('book', 'user')  # Ensure a user can only rate a book once
+
+    def __str__(self):
+        return f"Rating for {self.book.name} by {self.user.username}"
+
+
     
