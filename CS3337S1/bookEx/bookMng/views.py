@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 from .models import MainMenu
@@ -7,12 +7,13 @@ from .models import MainMenu
 from .forms import BookForm
 from django.http import HttpResponseRedirect
 
-from .models import Book
+from .models import Book, Rating
 
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.db.models import Q
+from django.db.models import Avg
 
 
 def index(request):
@@ -62,6 +63,7 @@ def displaybooks(request):
 
     for b in books:
         b.pic_path = b.picture.url[14:]
+        b.avg_rating = b.ratings.aggregate(Avg('rating'))['rating__avg']
 
     return render(request,
                   'bookMng/displaybooks.html',
@@ -128,5 +130,13 @@ class Register(CreateView):
     def form_valid(self, form):
         form.save()
         return HttpResponseRedirect(self.success_url)
+
+def rate_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+
+    # Check if the user has already rated this book
+    rating = Rating.objects.filter(book=book, user=request.user).first()
+
+    if request.method == 'POST':
 
 
