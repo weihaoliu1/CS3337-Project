@@ -25,13 +25,45 @@
         <th>
             Publisher User
         </th>
+        <th>
+            Book Rating (1 Per User)
+         </th>
+         <th>
+            Select Rating
+         </th>
     </tr>
  {% if books %}
         {% for book in books %}
             <tr>
                 <td><a href="book_detail/{{ book.id }}">{{ book.name }}</a></td>
                 <td>{{ book.username }}</td>
-            </tr>
+
+             <td>
+               {% if book.avg_rating %}
+                   Average Rating: {{ book.avg_rating|floatformat:1 }}
+               {% else %}
+                   No ratings yet.
+               {% endif %}
+             </td>
+             <td>
+               {% if user.is_authenticated %}
+                   <form method="post" action="{% url 'rate_book' book.id %}">
+                       {% csrf_token %}
+                       <label for="rating">:</label>
+                       <select name="rating" id="rating">
+                           <option value="1">1</option>
+                           <option value="2">2</option>
+                           <option value="3">3</option>
+                           <option value="4">4</option>
+                           <option value="5">5</option>
+                    </select>
+                    <button type="submit">Submit Rating</button>
+                </form>
+            {% else %}
+                <p>Please log in to rate this book.</p>
+            {% endif %}
+        </td>
+      </tr>
         {% endfor %}
     {% else %}
         <tr>
