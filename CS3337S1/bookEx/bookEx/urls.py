@@ -30,5 +30,6 @@ urlpatterns = [
     path('register/success', TemplateView.as_view(
         template_name='registration/register_success.html'),
          name='register-success'),
+    path('rate_book/<int:book_id>/', views.rate_book, name='rate_book'),
 
 ]
