@@ -39,4 +39,24 @@
         </td>
     </tr>
 </table>
+
+<br/><br/>
+<h2>Comments</h2>
+
+{% if not book.comments.all %}
+    No Comments Found... <a href="#">Add One</a>
+{% else %}
+    {% for comment in book.comments.all %}
+        <strong>
+            {{ comment.user.username }} -
+            {{ comment.created_at }}
+        </strong>
+         <br>
+        <br/>
+        {{ comment.text }}
+        <hr>
+
+    {% endfor %}
+{% endif %}
+
 {% endblock content %}
