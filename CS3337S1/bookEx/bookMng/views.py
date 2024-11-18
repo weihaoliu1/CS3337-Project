@@ -138,5 +138,18 @@ def rate_book(request, book_id):
     rating = Rating.objects.filter(book=book, user=request.user).first()
 
     if request.method == 'POST':
+        # Get the new rating value from the POST request
+        new_rating = int(request.POST['rating'])
 
+        if rating:
+            # If a rating already exists, update it
+            rating.rating = new_rating
+            rating.save()
+        else:
+            # If no rating exists, create a new one
+            rating = Rating(book=book, user=request.user, rating=new_rating)
+            rating.save()
+
+        return redirect('displaybooks')
+    return redirect('displaybooks')
 
