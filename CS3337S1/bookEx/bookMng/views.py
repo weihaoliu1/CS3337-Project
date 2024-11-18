@@ -14,6 +14,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.db.models import Q
 from django.db.models import Avg
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
@@ -73,7 +74,7 @@ def displaybooks(request):
                       'query': query
                   })
 
-
+@login_required(login_url='login')
 def mybooks(request):
     books = Book.objects.filter(username=request.user)
     for b in books:
@@ -84,6 +85,7 @@ def mybooks(request):
                       'item_list': MainMenu.objects.all(),
                       'books': books,
                   })
+
 
 
 def book_detail(request, book_id):
@@ -152,4 +154,3 @@ def rate_book(request, book_id):
 
         return redirect('displaybooks')
     return redirect('displaybooks')
-
