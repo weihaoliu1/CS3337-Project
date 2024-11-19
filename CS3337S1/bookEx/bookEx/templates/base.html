@@ -11,45 +11,185 @@
         {% endblock title %}
     </title>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff; /* Light blue background */
+        }
+
+        a {
+            text-decoration: none;
+            color: black; /* Make the text black */
+        }
+
+        a:hover {
+            color: #0056b3; /* Blue on hover */
+        }
+
+        /* Top User Bar */
+        span {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px 20px;
+            background-color: #87CEEB; /* Slate blue */
+            color: white;
+        }
+
+        span form {
+            margin-left: 10px;
+        }
+
+        span button, span a {
+            color: white;
+            background-color: #483d8b; /* Dark Slate Blue */
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        span button:hover, span a:hover {
+            background-color: #362d75; /* Deeper Slate Blue */
+        }
+
+        /* Banner Section */
+        .banner img {
+            width: 100%;
+            max-height: 150px; /* Smaller banner height */
+            object-fit: cover; /* Ensure it scales properly */
+            filter: contrast(120%); /* Adjust contrast for better visibility */
+            display: block;
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 20px;
+        }
+
+        /* Menu Section */
+        .menu {
+            flex: 1;
+            max-width: 200px;
+            background-color: #ffffff; /* Slate blue */
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .menu li {
+            margin-bottom: 10px;
+        }
+
+        .menu a {
+            display: block;
+            color: black; /* Book names in black */
+            background-color: #FFFFE0; /* Dark Slate Blue */
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .menu a:hover {
+            background-color: #362d75; /* Deeper Slate Blue */
+            color: white; /* White text on hover */
+        }
+
+        /* Main Content Section */
+        .main-content {
+            flex: 3;
+            margin-left: 20px;
+            background-color: #ffffff; /* White for content */
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-content h1 {
+            color: #333;
+        }
+
+        .main-content p {
+            color: #666;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #87CEEB; /* Slate blue */
+            color: white;
+            margin-top: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .menu {
+                max-width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
 </head>
 <body>
 
 <span>
     {% if user.is_authenticated %}
-        {{ user.username }}
-        <form action ="{% url 'logout' %}?next=/" method ="post">
-        <button type = "submit"> Logout </button>
-        {% csrf_token %}
+        Welcome, {{ user.username }}
+        <form action="{% url 'logout' %}?next=/" method="post">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
         </form>
     {% else %}
         Not Logged In
-    <a href ="{% url 'login' %}?next=/">Login</a>
+        <a href="{% url 'login' %}?next=/">Login</a>
     {% endif %}
 </span>
 
-    <div class="banner">
-        <img src="{% static 'banner.jpg' %}" alt="Web Page Banner" width="800" height="100">
+<div class="banner">
+    <img src="{% static 'banner.jpg' %}" alt="Web Page Banner">
+</div>
+
+<div class="container">
+    <div class="menu">
+        <ul>
+            {% block sidenav %}
+            <li><a href="#postbook">Post Book</a></li>
+            <li><a href="#displaybooks">Display Books</a></li>
+            <li><a href="#aboutus">About Us</a></li>
+            <li><a href="#mybooks">My Books</a></li>
+            {% endblock sidenav %}
+        </ul>
     </div>
-    <div class="container">
-        <div class="menu">
-            <ul>
-                {% block sidenav %}
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#contact">Contact</a></li>
-                {% endblock sidenav %}
-            </ul>
-        </div>
-        <div class="main-content">
-            {% block content %}
-            <h1>Welcome to My Web Page</h1>
-            <p>This is the main content area.</p>
-            {% endblock content %}
-        </div>
+    <div class="main-content">
+        {% block content %}
+        <h1>Welcome to My Web Page</h1>
+        <p>This is the main content area.</p>
+        {% endblock content %}
     </div>
-    <div class="footer">
-        <p>&copy; 2024 CS3337 Section 1</p>
-    </div>
+</div>
+
+<div class="footer">
+    <p>&copy; 2024 CS3337 Section 1</p>
+</div>
+
 </body>
 </html>
